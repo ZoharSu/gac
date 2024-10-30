@@ -74,3 +74,13 @@ LL *ll_get(LL_head *h, size_t pos)
 
     return curr;
 }
+
+LL *ll_find(LL_head h, gacptr p)
+{
+    LL *curr = h.head;
+    while (curr != NULL && curr->elem.ptr != p)
+        curr = curr->next;
+
+    return curr;
+
+}

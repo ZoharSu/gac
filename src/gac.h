@@ -34,5 +34,7 @@ void ll_remove(LL_head *h, size_t i);
 
 LL *ll_get(LL_head *h, size_t i);
 
+LL *ll_find(LL_head h, gacptr p);
+
 #endif // GAC_PRIVATE_HEADER
 #endif // GAC_HEADER_INCLUDED
