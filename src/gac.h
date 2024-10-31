@@ -17,7 +17,7 @@ typedef struct gac_alloc_t {
 typedef struct LinkedList {
     gac_alloc_t elem;
 
-    struct LL *next;
+    struct LinkedList *next;
 } LL;
 
 typedef struct {
@@ -26,7 +26,7 @@ typedef struct {
 
 size_t ll_length(const LL_head h);
 
-void ll_push_back(LL_head *h, LL_T elem);
+void ll_push(LL_head *h, gac_alloc_t elem);
 
 void ll_destroy(LL_head *h);
 
