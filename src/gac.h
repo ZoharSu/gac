@@ -1,11 +1,15 @@
 #ifndef GAC_HEADER_INCLUDED
 #define GAC_HEADER_INCLUDED
 
+#include <stddef.h>
+
 // ------------------------------------------
 
 #ifdef GAC_PRIVATE_HEADER
 
-typedef gacptr uintptr_t;
+#include <stdint.h>
+
+typedef uintptr_t gacptr;
 
 typedef struct gac_alloc_t {
     gacptr ptr;
