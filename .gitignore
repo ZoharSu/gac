@@ -1,1 +1,4 @@
 main
+builds/gac.o
+libs/objects/gac.o
+libs/objects/gacLL.o

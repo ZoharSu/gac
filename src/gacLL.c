@@ -1,24 +1,33 @@
 #define GAC_PRIVATE_HEADER
 #include "gac.h"
+#include <stdlib.h>
 
 size_t ll_length(const LL_head h)
 {
     size_t count = 0;
 
-    for (LL *l = h.head; l != NULL; p = l->next)
+    for (LL *l = h.head; l != NULL; l = l->next)
         count++;
 
     return count;
 }
 
-void ll_push(LL_head *h, LL_T elem)
+void ll_push(LL_head *h, gac_alloc_t elem)
 {
-    if (h.head == NULL) return;
+    LL *new = malloc(sizeof(LL));
+    new->elem = elem;
 
-    for (LL *last = h.head; last->next != NULL; last = last->next);
+    if (h->head == NULL)
+        h->head = new;
 
-    last->next = malloc(sizeof(LL));
-    last->next->elem = elem;
+    else {
+        LL *last = h->head;
+
+        while (last->next != NULL)
+            last = last->next;
+
+        last->next = new;
+    }
 }
 
 void ll_destroy(LL_head *h)
