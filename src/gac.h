@@ -3,13 +3,40 @@
 
 #include <stddef.h>
 
+#define GAC_INIT(x)       \
+    do {                  \
+        gac_init((x));    \
+    } while (0);          \
+
+void print_allocs(void);
+
+void gac_init(size_t alloc_est);
+
+void gac_exit(void);
 // ------------------------------------------
 
 #ifdef GAC_PRIVATE_HEADER
 
 #include <stdint.h>
+#include <signal.h>
+
+typedef enum _gacmark {
+    GAC_MARKED = 2349872350,
+} gacmark;
 
 typedef uintptr_t gacptr;
+
+void *gac_sweeper_main(void *p);
+
+void mark_from_roots(gacptr start, gacptr end);
+
+void gac_sweep(void);
+
+void segfault_handler(int signum);
+
+void segfault_handler_i(int sig, siginfo_t *info, void *ucontext);
+
+void print_bits(void *e, size_t len);
 
 typedef struct gac_alloc_t {
     gacptr ptr;
