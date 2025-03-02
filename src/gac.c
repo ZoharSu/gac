@@ -132,10 +132,13 @@ static void gfree(LL *target)
     free(target);
 }
 
-void print_allocs(void)
+void gac_print_allocations(void)
 {
     for (LL *l = allocs.head; l != NULL; l = l->next) {
-        printf("%c: %zu : %zu\n", is_marked((void*) l->elem.ptr) ? 'Y' : 'N' , l->elem.ptr, l->elem.len);
+        printf("%c: %zu : %zu\n",
+                is_marked((void*) l->elem.ptr) ? 'Y' : 'N',
+                l->elem.ptr,
+                l->elem.len);
     }
 }
 

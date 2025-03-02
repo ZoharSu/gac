@@ -8,11 +8,15 @@
         gac_init((x));    \
     } while (0);          \
 
-void print_allocs(void);
-
 void gac_init(size_t alloc_est);
 
 void gac_exit(void);
+
+void *galloc(size_t size);
+
+#ifdef GAC_DEBUG
+void gac_print_allocations(void);
+#endif // GAC_DEBUG
 // ------------------------------------------
 
 #ifdef GAC_PRIVATE_HEADER
