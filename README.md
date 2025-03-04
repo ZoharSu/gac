@@ -11,3 +11,4 @@
 - [ ] Scanning the roots will occur from the *esp* register at *main* and the maximum stack size will be *rlimit*
 - [ ] Pausing the main thread will be via a signal - namely, SIGUSR1
 - [ ] Asynchronous sweeping
+- [ ] Periodically recreate the bloom filter for lower false positives - maybe only in concurrent mode?
