@@ -2,3 +2,11 @@ main
 builds/gac.o
 libs/objects/gac.o
 libs/objects/gacLL.o
+libs/bloom_filter/murmur3
+libs/bloom_filter/bloom_filter.o
+libs/bloom_filter/bloomfilter
+libs/bloom_filter/bloomfilter.o
+libs/bloom_filter/tests
+src/.gac.c.swp
+tags
+testTargets

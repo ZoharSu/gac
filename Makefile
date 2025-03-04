@@ -1,10 +1,14 @@
 TARGET := ./builds
-.DEFAULT_GOAL := main
+.DEFAULT_GOAL := testAll
 
 LIBS := libs/objects
 SOURCES := src/gac.c src/gacLL.c
 HEADERS := src/gac.h
 WARNINGS := -Wall -Werror -Wextra
+
+TESTS := tests
+TEST_TARGET := testTargets
+TEST_FLAGS := -ggdb $(WARNINGS) $(LIBS)/* -lm
 
 gac.o: src/gac.c src/gac.h
 	$(CC) -ggdb $(WARNINGS) -c -o $(LIBS)/gac.o src/gac.c
@@ -12,14 +16,16 @@ gac.o: src/gac.c src/gac.h
 gacLL.o: src/gacLL.c src/gac.h
 	$(CC) -ggdb $(WARNINGS) -c -o $(LIBS)/gacLL.o src/gacLL.c
 
-main: $(LIBS)/* src/main.c gac.o gacLL.o
-	$(CC) -ggdb $(WARNINGS) $(LIBS)/* -lm -o $(TARGET)/main src/main.c
+sweep_test: $(LIBS)/* $(TESTS)/sweep_test.c gac.o gacLL.o
+	$(CC) $(TEST_FLAGS) -o $(TEST_TARGET)/sweep_test $(TESTS)/sweep_test.c
 
-.PHONY: run val
-run: main
-	$(TARGET)/main
+.PHONY: testSweep val
+testSweep: sweep_test
+	$(TEST_TARGET)/sweep_test
 
-val: main
-	valgrind $(TARGET)
+valSweep: testSweep
+	valgrind $(TEST_TARGET)/sweep_test
 
-all: main gac.o
+tests: testSweep
+
+all: tests gac.o
