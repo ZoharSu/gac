@@ -12,9 +12,13 @@
 
 BloomFilter *bf;
 LL_head allocs = { NULL };
+
 gacptr stack_start;
+
 jmp_buf segfault_env;
+
 struct sigaction segfault_oldsig;
+
 struct sigaction segfault_action = {
     .sa_handler = segfault_handler,
     .sa_flags = SA_RESTART | SA_SIGINFO,
@@ -65,8 +69,6 @@ void gac_init(size_t alloc_est)
 {
     sigemptyset(&segfault_action.sa_mask);
     bf = bf_new(0.1, alloc_est, murmur3);
-
-    // TODO: pthreads
 }
 
 void marking_phase(void)
@@ -77,25 +79,30 @@ void marking_phase(void)
 
 void mark_from_roots(gacptr start, gacptr /* non-inclusive */ end)
 {
-    assert(start > end);
+    assert(start > end); // stack grows downwards
 
     set_segfault_guard();
     for (volatile gacptr i = start; i > end; i -= 1) {
 
         if (sigsetjmp(segfault_env, true))
             continue; // means program segfaulted
-        
 
         void *ptr = *(void **)i;
         bool contained = bf_contains(bf, &ptr, sizeof(void *));
-        bool marked = contained ? is_marked(ptr) : false; 
+
+        bool marked = contained ? is_marked(ptr) : false;
+        // Possible segfault <-   ~~~~~~~~~~~~~~
 
         if (contained && !marked) {
             rem_segfault_guard();
 
+            // TODO: add config option to disable printing
             printf("marking %p\n", ptr);
 
             LL *node = ll_find(allocs, (gacptr) ptr);
+
+            if (node == NULL)
+                continue; // false positive
 
             gac_alloc_t alloc = node->elem;
 
