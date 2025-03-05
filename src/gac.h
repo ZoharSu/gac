@@ -12,15 +12,8 @@
 // ------------ Public Structs --------------
 typedef struct {
     size_t alloc_est;
-    size_t interval;
+    long long interval_ns;
 } gac_cfg_t;
-
-// -------------- GAC configuration ---------
-gac_cfg_t gac_cfg_make(void);
-
-void gac_cfg_set_interval(gac_cfg_t *cfg, size_t interval);
-
-void gac_cfg_set_allocation_esitmate(gac_cfg_t *cfg, size_t estimate);
 
 // ------------- Gac Initialization ---------
 
@@ -32,9 +25,11 @@ void gac_exit(void);
 
 void *galloc(size_t size);
 
-#ifdef GAC_DEBUG
 // ------------- Debug Functions ------------
+#ifdef GAC_DEBUG
+
 void gac_print_allocations(void);
+
 #endif // GAC_DEBUG
 // ------------------------------------------
 

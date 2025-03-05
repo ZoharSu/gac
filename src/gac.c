@@ -46,8 +46,8 @@ static void config_init_defaults(gac_cfg_t *cfg)
     if (cfg->alloc_est == 0)
         cfg->alloc_est = CFG_ESTIMATE_DEF;
 
-    if (cfg->interval == 0)
-        cfg->interval = CFG_INTERVAL_DEF;
+    if (cfg->interval_ns == 0)
+        cfg->interval_ns = CFG_INTERVAL_DEF;
 }
 
 static void mark(void *p)
@@ -122,7 +122,7 @@ void mark_from_roots(gacptr start, gacptr /* non-inclusive */ end)
         if (sigsetjmp(segfault_env, true))
             continue; // means program segfaulted
 
-        void *ptr = *(void **)i;
+        void *ptr = (void *) i;
         bool contained = bf_contains(bf, &ptr, sizeof(void *));
 
         bool marked = contained ? is_marked(ptr) : false;
