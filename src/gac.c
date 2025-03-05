@@ -10,6 +10,21 @@
 #include <assert.h>
 #include <setjmp.h>
 
+#ifdef GAC_DEBUG
+#include <stdarg.h>
+void dbg_print(const char *format, ...)
+{
+    va_list args;
+    va_start(args, format);
+
+    vprintf(format, args);
+
+    va_end(args);
+}
+#else
+void dbg_print(const char *, ...) {}
+#endif
+
 BloomFilter *bf;
 LL_head allocs = { NULL };
 
@@ -97,7 +112,7 @@ void mark_from_roots(gacptr start, gacptr /* non-inclusive */ end)
             rem_segfault_guard();
 
             // TODO: add config option to disable printing
-            printf("marking %p\n", ptr);
+            dbg_print("marking %p\n", ptr);
 
             LL *node = ll_find(allocs, (gacptr) ptr);
 
@@ -134,7 +149,7 @@ void *galloc(size_t size)
 
 static void gfree(LL *target)
 {
-    printf("freeing %zu\n", target->elem.ptr);
+    dbg_print("freeing %zu\n", target->elem.ptr);
     free((void *) target->elem.ptr);
     free(target);
 }
@@ -142,7 +157,7 @@ static void gfree(LL *target)
 void gac_print_allocations(void)
 {
     for (LL *l = allocs.head; l != NULL; l = l->next) {
-        printf("%c: %zu : %zu\n",
+        dbg_print("%c: %zu : %zu\n",
                 is_marked((void*) l->elem.ptr) ? 'Y' : 'N',
                 l->elem.ptr,
                 l->elem.len);
@@ -157,7 +172,7 @@ void print_bits(void *e, size_t len)
         char off[4] = "off";
         char *state = bf_bm_test(&bf->arr, hashed) ? on : off;
 
-        printf("%zu. %zu %s\n", i + 1, hashed, state);
+        dbg_print("%zu. %zu %s\n", i + 1, hashed, state);
 
     }
 
@@ -167,7 +182,7 @@ void gac_sweep(void)
 {
     LL *prev = NULL, *curr = allocs.head;
 
-    printf("\n");
+    dbg_print("\n");
     while (curr != NULL) {
         if (!is_marked((void*) curr->elem.ptr)) {
             LL *next = curr->next;

@@ -5,16 +5,17 @@ LIBS := libs/objects
 SOURCES := src/gac.c src/gacLL.c
 HEADERS := src/gac.h
 WARNINGS := -Wall -Werror -Wextra
+DEBUG := -DGAC_DEBUG -ggdb
 
 TESTS := tests
 TEST_TARGET := testTargets
 TEST_FLAGS := -ggdb $(WARNINGS) $(LIBS)/* -lm
 
 gac.o: src/gac.c src/gac.h
-	$(CC) -ggdb $(WARNINGS) -c -o $(LIBS)/gac.o src/gac.c
+	$(CC) $(DEBUG) $(WARNINGS) -c -o $(LIBS)/gac.o src/gac.c
 
 gacLL.o: src/gacLL.c src/gac.h
-	$(CC) -ggdb $(WARNINGS) -c -o $(LIBS)/gacLL.o src/gacLL.c
+	$(CC) $(DEBUG) $(WARNINGS) -c -o $(LIBS)/gacLL.o src/gacLL.c
 
 sweep_test: $(LIBS)/* $(TESTS)/sweep_test.c gac.o gacLL.o
 	$(CC) $(TEST_FLAGS) -o $(TEST_TARGET)/sweep_test $(TESTS)/sweep_test.c
