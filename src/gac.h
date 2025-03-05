@@ -3,18 +3,37 @@
 
 #include <stddef.h>
 
-#define GAC_INIT(x)       \
-    do {                  \
-        gac_init((x));    \
-    } while (0);          \
+#define GAC_INIT(config, err)                   \
+    do {                                        \
+        volatile char s;                        \
+        (err) = gac_init((config), (void*) &s); \
+    } while (0);                                \
 
-void gac_init(size_t alloc_est);
+// ------------ Public Structs --------------
+typedef struct {
+    size_t alloc_est;
+    size_t interval;
+} gac_cfg_t;
+
+// -------------- GAC configuration ---------
+gac_cfg_t gac_cfg_make(void);
+
+void gac_cfg_set_interval(gac_cfg_t *cfg, size_t interval);
+
+void gac_cfg_set_allocation_esitmate(gac_cfg_t *cfg, size_t estimate);
+
+// ------------- Gac Initialization ---------
+
+int gac_init(gac_cfg_t cfg, void*);
 
 void gac_exit(void);
+
+// -------------- Allocation ----------------
 
 void *galloc(size_t size);
 
 #ifdef GAC_DEBUG
+// ------------- Debug Functions ------------
 void gac_print_allocations(void);
 #endif // GAC_DEBUG
 // ------------------------------------------
@@ -23,6 +42,10 @@ void gac_print_allocations(void);
 
 #include <stdint.h>
 #include <signal.h>
+
+// config defaults
+#define CFG_ESTIMATE_DEF 1000
+#define CFG_INTERVAL_DEF 1000
 
 typedef enum _gacmark {
     GAC_MARKED = 2349872350,

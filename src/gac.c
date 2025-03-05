@@ -39,6 +39,17 @@ struct sigaction segfault_action = {
     .sa_flags = SA_RESTART | SA_SIGINFO,
 };
 
+gac_cfg_t config;
+
+static void config_init_defaults(gac_cfg_t *cfg)
+{
+    if (cfg->alloc_est == 0)
+        cfg->alloc_est = CFG_ESTIMATE_DEF;
+
+    if (cfg->interval == 0)
+        cfg->interval = CFG_INTERVAL_DEF;
+}
+
 static void mark(void *p)
 {
     *(gacmark*)(p - 1) = GAC_MARKED;
@@ -80,10 +91,19 @@ static void rem_segfault_guard(void)
     sigaction(SIGSEGV, &segfault_oldsig, NULL);
 }
 
-void gac_init(size_t alloc_est)
+int gac_init(gac_cfg_t cfg, void *s)
 {
-    sigemptyset(&segfault_action.sa_mask);
-    bf = bf_new(0.1, alloc_est, murmur3);
+    stack_start = (gacptr) s;
+
+    config = cfg;
+    config_init_defaults(&config);
+
+    if (sigemptyset(&segfault_action.sa_mask) != 0)
+        return -1;
+
+    bf = bf_new(0.1, config.alloc_est, murmur3);
+
+    return 0;
 }
 
 void marking_phase(void)
