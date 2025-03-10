@@ -10,9 +10,11 @@
     } while (0);                                \
 
 // ------------ Public Structs --------------
+
 typedef struct {
     size_t alloc_est;
     long long interval_ns;
+    int timer_sig;
 } gac_cfg_t;
 
 // ------------- Gac Initialization ---------
@@ -41,6 +43,7 @@ void gac_print_allocations(void);
 // config defaults
 #define CFG_ESTIMATE_DEF 1000
 #define CFG_INTERVAL_DEF 1000
+#define CFG_TIMER_SIG_DEF SIGRTMIN
 
 typedef enum _gacmark {
     GAC_MARKED = 2349872350,

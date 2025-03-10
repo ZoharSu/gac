@@ -48,6 +48,8 @@ static void config_init_defaults(gac_cfg_t *cfg)
 
     if (cfg->interval_ns == 0)
         cfg->interval_ns = CFG_INTERVAL_DEF;
+    if (cfg->timer_sig == 0)
+        cfg->timer_sig = CFG_TIMER_SIG_DEF;
 }
 
 static void mark(void *p)
@@ -131,7 +133,6 @@ void mark_from_roots(gacptr start, gacptr /* non-inclusive */ end)
         if (contained && !marked) {
             rem_segfault_guard();
 
-            // TODO: add config option to disable printing
             dbg_print("marking %p\n", ptr);
 
             LL *node = ll_find(allocs, (gacptr) ptr);
