@@ -1,5 +1,5 @@
 TARGET := ./builds
-.DEFAULT_GOAL := testAll
+.DEFAULT_GOAL := all
 
 LIBS := libs/objects
 SOURCES := src/gac.c src/gacLL.c
