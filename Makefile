@@ -20,6 +20,9 @@ gacLL.o: src/gacLL.c src/gac.h
 sweep_test: $(LIBS)/* $(TESTS)/sweep_test.c gac.o gacLL.o
 	$(CC) $(TEST_FLAGS) -o $(TEST_TARGET)/sweep_test $(TESTS)/sweep_test.c
 
+single_thread: $(LIBS)/* $(TESTS)/single_thread_test.c gac.o gacLL.o
+	$(CC) $(TEST_FLAGS) -o $(TEST_TARGET)/single_thread $(TESTS)/single_thread_test.c
+
 .PHONY: testSweep val
 testSweep: sweep_test
 	$(TEST_TARGET)/sweep_test
@@ -27,6 +30,12 @@ testSweep: sweep_test
 valSweep: testSweep
 	valgrind $(TEST_TARGET)/sweep_test
 
-tests: testSweep
+singleThread: single_thread
+	$(TEST_TARGET)/single_thread
+
+valSingleThread: singleThread
+	valgrind $(TEST_TARGET)/single_thread
+
+tests: testSweep singleThread
 
 all: tests gac.o
