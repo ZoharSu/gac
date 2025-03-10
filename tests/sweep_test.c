@@ -22,9 +22,15 @@ void test(uintptr_t s)
 int main(void)
 {
     volatile uintptr_t sp;
+    gac_cfg_t cfg = {
+       .alloc_est = 1000,
+    };
 
-    GAC_INIT(2000);
+    int err = 0;
 
+    GAC_INIT(cfg, err);
+
+    (void) err;
     printf("------------------\n\n");
 
     volatile int *x = galloc(3);
@@ -34,7 +40,7 @@ int main(void)
         int rand_int = rand();
         x = galloc(rand_int);
     }
-    x = NULL;
+    x = galloc(3);
 
     test((gacptr) &sp);
 
